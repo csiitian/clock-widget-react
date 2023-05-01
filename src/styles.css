@@ -1,0 +1,82 @@
+.app {
+    background-color: #0e9aa7;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+}
+
+.rectangle-border-button {
+    width: 5vmin;
+    height: 5vmin;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.text-icon {
+    font-size: 2vmin;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    pointer-events: none;
+}
+
+.break-time {
+    font-size: 3vmin;
+    user-select: none;
+    pointer-events: none;
+}
+
+.session-time {
+    font-size: 3vmin;
+    user-select: none;
+    pointer-events: none;
+}
+
+.text-circular-background {
+    font-size: 2.5vmin;
+    width: 5vmin;
+    height: 5vmin;
+    font-weight: bold;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    user-select: none;
+    pointer-events: none;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
+}
+
+.pomodoro-circular-container {
+    width: 60vmin;
+    height: 60vmin;
+    border-radius: 50%;
+    border: 5px solid rgba(255, 255, 255, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+}
+
+#time-left {
+    font-size: 15vmin;
+    font-weight: bold;
+    color: white;
+    user-select: none;
+    pointer-events: none;
+}
+
+#timer-label {
+    font-size: 5vmin;
+    color: white;
+    user-select: none;
+    pointer-events: none;
+}
