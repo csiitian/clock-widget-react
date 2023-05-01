@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './button.css';
+import StateEnum from './StateEnum';
 
-function PomodoroTime({ sessionTime, breakTime, timeLeft, setTimeLeft, sessionInProgress, setSessionInProgress, breakInProgress, setBreakInProgress }) {
+function PomodoroTime({ sessionTime, breakTime, timeLeft, setTimeLeft, sessionState, setSessionState, breakState, setBreakState }) {
 
     const [intervalId, setIntervalId] = useState(null);
     const [audio, setAudio] = useState(new Audio('/audio/wake-up.mp3'));
@@ -11,29 +12,47 @@ function PomodoroTime({ sessionTime, breakTime, timeLeft, setTimeLeft, sessionIn
     }
 
     function handleStartStop() {
-        setSessionInProgress(!sessionInProgress);
+        // STOP -> START -> PAUSED -> START -> PAUSED ...
+        if(sessionState === StateEnum.PAUSED) {
+            setSessionState(StateEnum.STARTED);
+        } else if(breakState === StateEnum.PAUSED) {
+            setBreakState(StateEnum.STARTED);
+        } else if(sessionState === StateEnum.STARTED) {
+            setSessionState(StateEnum.PAUSED);
+        } else if(breakState === StateEnum.STARTED) {
+            setBreakState(StateEnum.PAUSED);
+        } else if(sessionState === StateEnum.STOPPED) {
+            setSessionState(StateEnum.STARTED);
+        } else if(breakState === StateEnum.STOPPED) {
+            setBreakState(StateEnum.STARTED);
+        }
     }
 
     function handleReset() {
         // handle reset of session or break
-        setSessionInProgress(false);
-        setBreakInProgress(false);
+        setSessionState(StateEnum.STOPPED);
+        setBreakState(StateEnum.STOPPED);
         setTimeLeft(sessionTime * 60);
     }
 
     function handleTimerEnd() {
         // handle end of session or break
         playSound();
-        if (sessionInProgress) {
+        if (sessionState === StateEnum.STARTED) {
             console.log('Session Completed, Take Rest Now!');
         }
-        if (breakInProgress) {
+        if (breakState === StateEnum.STARTED) {
             console.log('Break Completed, It\'s time to focus now!');
         }
         setTimeout(() => {
-            setSessionInProgress(!sessionInProgress);
-            setBreakInProgress(!breakInProgress);
-            setTimeLeft(breakInProgress ? breakTime * 60 : sessionTime * 60);
+            if(sessionState === StateEnum.STARTED) {
+                setSessionState(StateEnum.STOPPED);
+                setBreakState(StateEnum.STARTED);
+            } else if(breakState === StateEnum.STARTED) {
+                setBreakState(StateEnum.STOPPED);
+                setSessionState(StateEnum.STARTED);
+            }
+            setTimeLeft(breakState === StateEnum.STARTED ? breakTime * 60 : sessionTime * 60);
         }, 5000);
     }
 
@@ -48,10 +67,10 @@ function PomodoroTime({ sessionTime, breakTime, timeLeft, setTimeLeft, sessionIn
 
     useEffect(() => {
         // handle start of session or break
-        if (sessionInProgress || breakInProgress) {
+        if (sessionState === StateEnum.STARTED || breakState === StateEnum.STARTED) {
             // set audio for end of session or break
-            if(sessionInProgress) setAudio(new Audio('/audio/time-up.mp3'));
-            if(breakInProgress) setAudio(new Audio('/audio/wake-up.mp3'));
+            if(sessionState === StateEnum.STARTED) setAudio(new Audio('/audio/time-up.mp3'));
+            if(breakState === StateEnum.STARTED) setAudio(new Audio('/audio/wake-up.mp3'));
 
             // start timer
             const interval = setInterval(() => {
@@ -62,7 +81,7 @@ function PomodoroTime({ sessionTime, breakTime, timeLeft, setTimeLeft, sessionIn
             setIntervalId(interval)
             return () => clearInterval(interval);
         }
-    }, [sessionInProgress, breakInProgress]);
+    }, [sessionState, breakState]);
 
     useEffect(() => {
         // handle end of timer
@@ -75,7 +94,7 @@ function PomodoroTime({ sessionTime, breakTime, timeLeft, setTimeLeft, sessionIn
     return (
         <div class="container col-12">
             <div class="container pomodoro-circular-container">
-                <h3 id="timer-label" class="align-self-center">{breakInProgress ? 'Break' : 'Session'}</h3>
+                <h3 id="timer-label" class="align-self-center">{breakState !== StateEnum.STOPPED ? 'Break' : 'Session'}</h3>
                 <div class="row d-flex justify-content-center">
                     <div class="col align-self-center">
                         <h1 id="time-left">{formatTimeLeft()}</h1>
@@ -85,7 +104,7 @@ function PomodoroTime({ sessionTime, breakTime, timeLeft, setTimeLeft, sessionIn
             <div class="row py-4 d-flex justify-content-center">
                 <div class="col d-flex justify-content-end">
                     <button id="start_stop" class="btn btn-outline-secondary text-white btn-sm" 
-                        onClick={handleStartStop}>{sessionInProgress || breakInProgress ? 'STOP' : 'START'}</button>
+                        onClick={handleStartStop}>{sessionState !== StateEnum.STOPPED || breakState !== StateEnum.STOPPED ? 'STOP' : 'START'}</button>
                 </div>
                 <div class="col d-flex justify-content-start">
                     <button id="reset" class="btn btn-outline-secondary text-white btn-sm" 

@@ -5,14 +5,15 @@ import PomodoroTime from './PomodoroTime';
 import './styles.css';
 // import io from "socket.io-client";
 import HandleKeyboardButton from './HandleKeyboardButton';
+import StateEnum from './StateEnum';
 
 function App() {
 
   const [breakTime, setBreakTime] = useState(initialBreakTime());
   const [sessionTime, setSessionTime] = useState(initialSessionTime());
-  const [sessionInProgress, setSessionInProgress] = useState(false);
-  const [breakInProgress, setBreakInProgress] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(breakInProgress ? breakTime * 60 : sessionTime * 60);
+  const [sessionState, setSessionState] = useState(StateEnum.STOPPED);
+  const [breakState, setBreakState] = useState(StateEnum.STOPPED);
+  const [timeLeft, setTimeLeft] = useState(breakState !== StateEnum.STOPPED ? breakTime * 60 : sessionTime * 60);
   // const socket = io("http://localhost:5050");
 
   function initialBreakTime() {
@@ -34,8 +35,8 @@ function App() {
   }
 
   useEffect(() => {
-    if (!sessionInProgress && !breakInProgress) {
-      setTimeLeft(breakInProgress ? breakTime * 60 : sessionTime * 60);
+    if (sessionState === StateEnum.STOPPED && breakState === StateEnum.STOPPED) {
+      setTimeLeft(breakState !== StateEnum.STOPPED ? breakTime * 60 : sessionTime * 60);
     }
   }, [breakTime, sessionTime]);
 
@@ -56,10 +57,9 @@ function App() {
         <React.Fragment class="py-4 align-self-center">
           <PomodoroTime sessionTime={sessionTime} breakTime={breakTime}
             timeLeft={timeLeft} setTimeLeft={setTimeLeft}
-            sessionInProgress={sessionInProgress} setSessionInProgress={setSessionInProgress}
-            breakInProgress={breakInProgress} setBreakInProgress={setBreakInProgress} />
+            sessionState={sessionState} setSessionState={setSessionState}
+            breakState={breakState} setBreakState={setBreakState} />
         </React.Fragment>
-          
         
       </div>
     </div>
