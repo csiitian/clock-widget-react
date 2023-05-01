@@ -3,7 +3,7 @@ import BreakTime from './BreakTime';
 import SessionTime from './SessionTime';
 import PomodoroTime from './PomodoroTime';
 import './styles.css';
-import io from "socket.io-client";
+// import io from "socket.io-client";
 import HandleKeyboardButton from './HandleKeyboardButton';
 
 function App() {
