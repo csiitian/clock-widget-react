@@ -14,7 +14,7 @@ function HandleKeyboardButton() {
 
   useEffect(() => {
     function handleKeyDown(event) {
-      if (event.ctrlKey && event.key === 'f') {
+      if (event.key === 'f') {
         handleFullScreen()
       }
     }
