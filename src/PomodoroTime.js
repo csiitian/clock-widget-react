@@ -13,17 +13,17 @@ function PomodoroTime({ sessionTime, breakTime, timeLeft, setTimeLeft, sessionSt
 
     function handleStartStop() {
         // STOP -> START -> PAUSED -> START -> PAUSED ...
-        if(sessionState === StateEnum.PAUSED) {
+        if (sessionState === StateEnum.PAUSED) {
             setSessionState(StateEnum.STARTED);
-        } else if(breakState === StateEnum.PAUSED) {
+        } else if (breakState === StateEnum.PAUSED) {
             setBreakState(StateEnum.STARTED);
-        } else if(sessionState === StateEnum.STARTED) {
+        } else if (sessionState === StateEnum.STARTED) {
             setSessionState(StateEnum.PAUSED);
-        } else if(breakState === StateEnum.STARTED) {
+        } else if (breakState === StateEnum.STARTED) {
             setBreakState(StateEnum.PAUSED);
-        } else if(sessionState === StateEnum.STOPPED) {
+        } else if (sessionState === StateEnum.STOPPED) {
             setSessionState(StateEnum.STARTED);
-        } else if(breakState === StateEnum.STOPPED) {
+        } else if (breakState === StateEnum.STOPPED) {
             setBreakState(StateEnum.STARTED);
         }
     }
@@ -45,10 +45,10 @@ function PomodoroTime({ sessionTime, breakTime, timeLeft, setTimeLeft, sessionSt
             console.log('Break Completed, It\'s time to focus now!');
         }
         setTimeout(() => {
-            if(sessionState === StateEnum.STARTED) {
+            if (sessionState === StateEnum.STARTED) {
                 setSessionState(StateEnum.STOPPED);
                 setBreakState(StateEnum.STARTED);
-            } else if(breakState === StateEnum.STARTED) {
+            } else if (breakState === StateEnum.STARTED) {
                 setBreakState(StateEnum.STOPPED);
                 setSessionState(StateEnum.STARTED);
             }
@@ -69,8 +69,8 @@ function PomodoroTime({ sessionTime, breakTime, timeLeft, setTimeLeft, sessionSt
         // handle start of session or break
         if (sessionState === StateEnum.STARTED || breakState === StateEnum.STARTED) {
             // set audio for end of session or break
-            if(sessionState === StateEnum.STARTED) setAudio(new Audio('/audio/time-up.mp3'));
-            if(breakState === StateEnum.STARTED) setAudio(new Audio('/audio/wake-up.mp3'));
+            if (sessionState === StateEnum.STARTED) setAudio(new Audio('/audio/time-up.mp3'));
+            if (breakState === StateEnum.STARTED) setAudio(new Audio('/audio/wake-up.mp3'));
 
             // start timer
             const interval = setInterval(() => {
@@ -103,11 +103,15 @@ function PomodoroTime({ sessionTime, breakTime, timeLeft, setTimeLeft, sessionSt
             </div>
             <div class="row py-4 d-flex justify-content-center">
                 <div class="col d-flex justify-content-end">
-                    <button id="start_stop" class="btn btn-outline-secondary text-white btn-sm" 
-                        onClick={handleStartStop}>{sessionState !== StateEnum.STOPPED || breakState !== StateEnum.STOPPED ? 'STOP' : 'START'}</button>
+                    <button id="start_stop" class="btn btn-outline-secondary text-white btn-sm"
+                        onClick={handleStartStop}>
+                        {sessionState === StateEnum.STARTED || breakState === StateEnum.STARTED ? 'STOP' :
+                            sessionState === StateEnum.PAUSED || breakState === StateEnum.PAUSED ? 'RESUME' :
+                                'START'}
+                    </button>
                 </div>
                 <div class="col d-flex justify-content-start">
-                    <button id="reset" class="btn btn-outline-secondary text-white btn-sm" 
+                    <button id="reset" class="btn btn-outline-secondary text-white btn-sm"
                         onClick={handleReset}>RESET</button>
                 </div>
             </div>

@@ -8,7 +8,6 @@ import HandleKeyboardButton from './HandleKeyboardButton';
 import StateEnum from './StateEnum';
 
 function App() {
-
   const [breakTime, setBreakTime] = useState(initialBreakTime());
   const [sessionTime, setSessionTime] = useState(initialSessionTime());
   const [sessionState, setSessionState] = useState(StateEnum.STOPPED);
